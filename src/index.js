@@ -8,7 +8,7 @@ import { smoothScroll } from './js/smoothScroll';
 
 let query = '';
 let page = 1;
-let per_page = 40;
+let per_page = 20;
 
 const lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
@@ -21,6 +21,8 @@ const lightbox = new SimpleLightbox('.gallery a', {
 
 refs.form.addEventListener('submit', handleSubmit);
 
+refs.loader.classList.add('js-hidden');
+
 const options = {
   rootMargin: '150px',
   threshold: 1.0,
@@ -32,7 +34,7 @@ const observer = new IntersectionObserver(onEntry, options);
 
 async function handleSubmit(e) {
   e.preventDefault();
-  observer.observe(refs.sentinel);
+  observer.observe(refs.target);
   const form = e.currentTarget;
   const searchQuery = form.elements.searchQuery.value.trim();
   if (searchQuery === '') return;
@@ -52,29 +54,29 @@ async function handleSubmit(e) {
         Notify.success(`Hooray! We found ${data.totalHits} images.`);
         renderMurcup(data.hits);
         smoothScroll();
-        observer.observe(refs.sentinel);
+        observer.observe(refs.target);
       }
       return data;
     })
     .catch(error => error.message)
-    .finally();
-  
-    await lightbox.refresh();
-    await lightbox.on('shown.simplelightbox', function () {
-      refs.body.classList.add('disable-scroll');
-    });
-    await lightbox.on('closed.simplelightbox', function () {
-      refs.body.classList.remove('disable-scroll');
-    });
+    .finally(() => refs.spinner.classList.add('js-hidden'));
 
+  await refs.form.reset();
+  await lightbox.refresh();
+  await lightbox.on('shown.simplelightbox', function () {
+    refs.body.classList.add('disable-scroll');
+  });
+  await lightbox.on('closed.simplelightbox', function () {
+    refs.body.classList.remove('disable-scroll');
+  });
 }
 
 function onEntry(entries) {
   entries.forEach(async entry => {
     if (entry.isIntersecting && query !== '') {
       page += 1;
-      observer.observe(refs.sentinel);
-      //
+      observer.observe(refs.target);
+      refs.spinner.classList.add('js-hidden');
       await fetchSearch(query, page, per_page)
         .then(data => {
           renderMurcup(data.hits);
@@ -87,20 +89,20 @@ function onEntry(entries) {
             Notify.info(
               "We're sorry, but you've reached the end of search results."
             );
-            observer.observe(refs.sentinel);
+            observer.observe(refs.target);
             return;
           }
         })
         .catch(error => error.message)
-          .finally();
-        
-        await lightbox.refresh();
-        await lightbox.on('shown.simplelightbox', () => {
-          refs.body.classList.add('disable-scroll');
-        });
-        await lightbox.on('closed.simplelightbox', () => {
-          refs.body.classList.remove('disable-scroll');
-        });
+        .finally(() => refs.loader.classList.add('js-hidden'));
+
+      await lightbox.refresh();
+      await lightbox.on('shown.simplelightbox', () => {
+        refs.body.classList.add('disable-scroll');
+      });
+      await lightbox.on('closed.simplelightbox', () => {
+        refs.body.classList.remove('disable-scroll');
+      });
     }
   });
 }

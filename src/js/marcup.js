@@ -5,25 +5,26 @@ export const getGalleryTemplate = ({
   views,
   comments,
   downloads,
+  tags,
 }) => {
   return `
       <div class="photo-card">
     <a class="gallery-link" href="${largeImageURL}">
-      <img src="${webformatURL}" alt="" loading="lazy" />
-    </a>
-    <div class="info">
+      <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+      <div class="info">
       <p class="info-item">
-        <b>Likes: ${likes}</b>
+        <b>Likes: <span class="info-text">${likes}</span></b>
       </p>
       <p class="info-item">
-        <b>Views: ${views}</b>
+        <b>Views: <span class="info-text">${views}</span></b>
       </p>
       <p class="info-item">
-        <b>Coments: ${comments}</b>
+        <b>Coments:<span class="info-text"> ${comments}</span></b>
       </p>
       <p class="info-item">
-        <b>Downloads: ${downloads}</b>
+        <b>Downloads: <span class="info-text">${downloads}</span></b>
       </p>
     </div>
+    </a>
   </div>`;
 };
