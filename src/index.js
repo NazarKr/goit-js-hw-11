@@ -30,8 +30,6 @@ const options = {
 
 const observer = new IntersectionObserver(onEntry, options);
 
-//
-
 async function handleSubmit(e) {
   e.preventDefault();
   observer.observe(refs.target);
@@ -76,7 +74,7 @@ function onEntry(entries) {
     if (entry.isIntersecting && query !== '') {
       page += 1;
       observer.observe(refs.target);
-      refs.spinner.classList.add('js-hidden');
+    //   refs.spinner.classList.remove('js-hidden');
       await fetchSearch(query, page, per_page)
         .then(data => {
           renderMurcup(data.hits);

@@ -66,20 +66,6 @@ img {
   border-radius: 5px;
 }
 
-.js-hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.loader {
-  display: flex;
-  margin-top: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  font-size: medium;
-}
-
 .gallery {
   display: flex;
   max-width: 1140px;
@@ -136,4 +122,16 @@ img {
 
 .disable-scroll {
   overflow: hidden;
+}
+
+.js-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader {
+  margin-top: 20px;
+  font-size: 24px;
+  text-align: center;
 }
