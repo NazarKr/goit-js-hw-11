@@ -26,6 +26,7 @@ button {
 }
 
 img {
+  max-height: 220px;
   display: block;
   max-width: 100%;
   height: auto;
