@@ -57,7 +57,7 @@ async function handleSubmit(e) {
       return data;
     })
     .catch(error => error.message)
-    .finally(() => refs.spinner.classList.add('js-hidden'));
+    .finally(() => refs.spinner.classList.remove('js-hidden'));
 
   await refs.form.reset();
   await lightbox.refresh();
@@ -74,7 +74,6 @@ function onEntry(entries) {
     if (entry.isIntersecting && query !== '') {
       page += 1;
       observer.observe(refs.target);
-    //   refs.spinner.classList.remove('js-hidden');
       await fetchSearch(query, page, per_page)
         .then(data => {
           renderMurcup(data.hits);
@@ -92,7 +91,7 @@ function onEntry(entries) {
           }
         })
         .catch(error => error.message)
-        .finally(() => refs.loader.classList.add('js-hidden'));
+        .finally(() => refs.loader.classList.remove('js-hidden'));
 
       await lightbox.refresh();
       await lightbox.on('shown.simplelightbox', () => {
